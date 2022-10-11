@@ -71,7 +71,7 @@ contract Exchange {
 
   //Make Order
   //User1 creates the order, which is the msg.sender, and later the user2 needs to fill the order
-  function makeOrder(address _tokenGet, uint256 _amountGet, address _tokenGive, uint _amountGive) public {
+  function makeOrder(address _tokenGet, uint256 _amountGet, address _tokenGive, uint256 _amountGive) public {
     //Prevent orders if token aren't on exchange
     require(balanceOf(_tokenGive,msg.sender) >= _amountGive);
 
