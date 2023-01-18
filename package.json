@@ -4,9 +4,9 @@
   "private": true,
   "dependencies": {
     "@ethersproject/providers": "^5.7.0",
-    "@nomicfoundation/hardhat-chai-matchers": "^1.0.3",
     "@nomicfoundation/hardhat-network-helpers": "^1.0.6",
     "@nomiclabs/hardhat-etherscan": "^3.1.0",
+    "@reduxjs/toolkit": "^1.9.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -26,7 +26,7 @@
     "react-scripts": "5.0.1",
     "redux": "^4.1.2",
     "redux-devtools-extension": "^2.13.9",
-    "redux-thunk": "^2.4.1",
+    "redux-thunk": "^2.4.2",
     "reselect": "^4.1.5",
     "solidity-coverage": "^0.8.2",
     "ts-node": "^10.9.1",
@@ -59,8 +59,9 @@
     ]
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^1.0.2",
-    "@nomiclabs/hardhat-ethers": "^2.1.1",
+    "@nomicfoundation/hardhat-chai-matchers": "^1.0.5",
+    "@nomicfoundation/hardhat-toolbox": "^2.0.1",
+    "@nomiclabs/hardhat-ethers": "^2.0.5",
     "chai": "^4.3.6",
     "ethers": "^5.7.0",
     "hardhat": "^2.10.1"
