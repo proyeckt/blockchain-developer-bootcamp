@@ -15,27 +15,55 @@ export const provider = (state = {},action) => { //Default value for state is an
                 ...state,
                 account: action.account
             };
-        case 'TOKEN_LOADED':
+        case 'ETHER_BALANCE_LOADED':
             return {
                 ...state,
-                token: action.account,
-                symbol: action.symbol
+                balance: action.balance
             };
+        
         default:
             return state;
     }
 }
 
-export const tokens = (state = {loaded: false, contract: null},action) => { //Default value for state is an empty object
+const DEFAULT_TOKENS_STATE = { 
+    loaded: false, 
+    contracts: [],
+    symbols: []
+};
+
+export const tokens = (state = DEFAULT_TOKENS_STATE, action) => { //Default value for state is an empty object
     switch (action.type){
-        case 'TOKEN_LOADED':
+        case 'TOKEN_1_LOADED':
             return {
                 ...state,
                 loaded: true,
-                contract: action.token,
-                symbol: action.symbol 
+                contracts: [...state.contracts,action.token],
+                symbols: [...state.symbols,action.symbol]
             };
+            case 'TOKEN_2_LOADED':
+                return {
+                    ...state,
+                    loaded: true,
+                    contracts: [...state.contracts,action.token],
+                    symbols: [...state.symbols,action.symbol]
+                };
         default:
             return state;
     }
 }
+
+export const exchange = (state = { loaded: false, contract: {} }, action) => {
+    switch(action.type){
+        case 'EXCHANGE_LOADED':
+            return {
+                ...state,
+                loaded: true,
+                contract: action.exchange
+            }
+        default:
+            return state;
+    }
+}
+
+
