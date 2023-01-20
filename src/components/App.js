@@ -5,6 +5,8 @@ import config from '../config.json';
 
 import { loadProvider, loadNetwork, loadAccount, loadTokens, loadExchange } from '../store/interactions';
 
+import Navbar from './Navbar';
+
 function App() {
 
   const dispatch = useDispatch();
@@ -17,13 +19,20 @@ function App() {
     //Fetch current network's chainId (e.g hardhat: 31337)
     const chainId = await loadNetwork(provider,dispatch);
 
-    //Fetch current account and balance from Metamask
-    await loadAccount(provider, dispatch);
+    //Reload page when network changes
+    window.ethereum.on('chainChanged', () => {
+      window.location.reload();
+    });
+
+    //Fetch current account and balance from Metamask when changed
+    window.ethereum.on('accountsChanged', async () => {
+      await loadAccount(provider, dispatch);
+    });
 
     //Load Token Smart Contract
-    const DApp = config[chainId].ZLH;
+    const ZLH = config[chainId].ZLH;
     const mETH = config[chainId].mETH;
-    await loadTokens(provider,[DApp.address,mETH.address], dispatch);
+    await loadTokens(provider,[ZLH.address,mETH.address], dispatch);
 
     //Load Exchange Smart Contract
     const exchange = config[chainId].exchange;
@@ -37,7 +46,7 @@ function App() {
   return (
     <div>
 
-      {/* Navbar */}
+      <Navbar /> 
 
       <main className='exchange grid'>
         <section className='exchange__section--left grid'>
