@@ -45,7 +45,8 @@ const Balance = () => {
   // Step 4: Notify app that transfer was sucessful
   // Step 5: Handle transfer fails - notify app
 
-  const depositHandler = async (e, token) => {
+  const depositOrWithdrawHandler = async (e, token) => {
+
     e.preventDefault(); //Prevent page refresh
 
     if(token.address === tokens[0].address){
@@ -92,7 +93,7 @@ const Balance = () => {
           <p><small>Wallet </small> <br /> { tokenBalances && tokenBalances[0]} </p>
           <p><small>Exchange </small> <br /> { exchangeBalances && exchangeBalances[0]} </p>
         </div>
-         <form onSubmit={(e) => depositHandler(e,tokens[0])}>
+         <form onSubmit={ (e) => depositOrWithdrawHandler(e,tokens[0])}>
           <label htmlFor="token0">{symbols && symbols[0]} Amount</label>
           <input 
             type="text" 
@@ -114,7 +115,7 @@ const Balance = () => {
           <p><small>Wallet </small> <br /> { tokenBalances && tokenBalances[1]} </p>
           <p><small>Exchange </small> <br /> { exchangeBalances && exchangeBalances[1]} </p>
          </div>
-         <form onSubmit={(e) => depositHandler(e,tokens[1])}>
+         <form onSubmit={ (e) => depositOrWithdrawHandler(e,tokens[1])}>
          <label htmlFor="token1">{symbols && symbols[1]} Amount</label>
          <input 
             type="text" 
