@@ -68,7 +68,6 @@ const Balance = () => {
       withdrawRef.current.className = 'tab';
       setTransferType("Deposit");
     }
-  
     e.target.className = 'tab tab--active';
   }
 
