@@ -5,6 +5,7 @@ import moment from 'moment';
 
 const GREEN = '#25CE8F';
 const RED = '#F45353';
+const BLUE = '#2187D0';
 
 const tokens = state => get(state, 'tokens.contracts');
 const allOrders = state => get(state, 'exchange.allOrders.data', []);
@@ -53,8 +54,7 @@ const decorateOrder = (order, tokens) => {
 const decorateOrderBookOrders = (orders, tokens) =>
   orders.map((order) => {
     order = decorateOrder(order, tokens);
-    order = decorateOrderBookOrder(order, tokens);
-    return order;
+    return decorateOrderBookOrder(order, tokens);
   });
 
 const decorateOrderBookOrder = (order, tokens) => {
@@ -79,6 +79,55 @@ const decorateOrderBookOrder = (order, tokens) => {
 }
 
 // --------------------------------------------------------------------------
+// ALL FILLED ORDERS
+export const filledOrdersSelector = createSelector(
+  filledOrders,
+  tokens,
+  (orders, tokens) => {
+    if (!tokens[0] || !tokens[1]) return;
+
+    // Filter orders by selected tokens
+    const selectedTokenAddresses = [tokens[0].address, tokens[1].address];
+    orders = orders.filter((o) => selectedTokenAddresses.includes(o.tokenGet) && selectedTokenAddresses.includes(o.tokenGive));
+    
+    // Step 1: sort orders by time ascending for price comparison
+    orders = orders.sort((a, b) => a.timestamp - b.timestamp);
+
+    // Step 2: apply order color (decorate order)
+    orders = decorateFilledOrders(orders, tokens);
+
+    // Step 3: sort orders by time descending for UI
+    orders = orders.sort((a, b) => b.timestamp - a.timestamp);
+
+    return orders;
+  });
+
+const decorateFilledOrders = (orders, tokens) => {
+  // Track previous order to compare history
+  let previousOrder = orders[0];
+
+  return orders.map((order) => {
+    // decorate each individual order
+    order = decorateOrder(order, tokens);
+    order = decorateFilledOrder(order, previousOrder);
+    previousOrder = order; // Update the previous order once it's decorated
+    return order;
+  });
+}
+
+const decorateFilledOrder = (order, previousOrder) => {
+  return {
+    ...order,
+    tokenPriceClass: tokenPriceClass(order, previousOrder)
+  };
+}
+
+const tokenPriceClass = (order, previousOrder) => {
+  if (order.id === previousOrder.id) return BLUE;
+  return order.tokenPrice > previousOrder.tokenPrice ? GREEN : order.tokenPrice < previousOrder.tokenPrice ? RED : BLUE
+}
+
+// --------------------------------------------------------------------------
 // ORDER BOOk
 export const orderBookSelector = createSelector(openOrders, tokens, (orders, tokens) => {
 
@@ -86,7 +135,7 @@ export const orderBookSelector = createSelector(openOrders, tokens, (orders, tok
   
   // Filter orders by selected tokens
   const selectedTokenAddresses = [tokens[0].address, tokens[1].address];
-  orders = orders.filter((o) => selectedTokenAddresses.includes(o.tokenGet) || selectedTokenAddresses.includes(o.tokenGive));
+  orders = orders.filter((o) => selectedTokenAddresses.includes(o.tokenGet) && selectedTokenAddresses.includes(o.tokenGive));
   
   // Decorate orders
   orders = decorateOrderBookOrders(orders, tokens);
@@ -112,7 +161,7 @@ export const priceChartSelector = createSelector(filledOrders, tokens, (orders, 
 
   // Filter orders by selected tokens
   const selectedTokenAddresses = [tokens[0].address, tokens[1].address];
-  orders = orders.filter((o) => selectedTokenAddresses.includes(o.tokenGet) || selectedTokenAddresses.includes(o.tokenGive));
+  orders = orders.filter((o) => selectedTokenAddresses.includes(o.tokenGet) && selectedTokenAddresses.includes(o.tokenGive));
 
   // Sort orders by date ascending to compare history
   orders = orders.sort((a, b) => a.timestamp - b.timestamp);
@@ -129,9 +178,6 @@ export const priceChartSelector = createSelector(filledOrders, tokens, (orders, 
   
   // Get second last order price
   const secondlastPrice = get(secondLastOrder, 'tokenPrice', 0);
-
-  console.log('lastPrice', lastPrice);
-  console.log('secondLastPrice', secondlastPrice);
 
   return {
     series: [{
