@@ -96,22 +96,62 @@ export const exchange = (state = DEFAULT_EXCHANGE_STATE, action) => {
                     data: action.allOrders
                 }
             };
-            case 'CANCELLED_ORDERS_LOADED':
-                return {
-                    ...state,
-                    cancelledOrders: {
-                        loaded: true,
-                        data: action.cancelledOrders
-                    }
-                };
-            case 'FILLED_ORDERS_LOADED':
-                return {
-                    ...state,
-                    filledOrders: {
-                        loaded: true,
-                        data: action.filledOrders
-                    }
-                };
+        case 'CANCELLED_ORDERS_LOADED':
+            return {
+                ...state,
+                cancelledOrders: {
+                    loaded: true,
+                    data: action.cancelledOrders
+                }
+            };
+        case 'FILLED_ORDERS_LOADED':
+            return {
+                ...state,
+                filledOrders: {
+                    loaded: true,
+                    data: action.filledOrders
+                }
+            };
+
+        // --------------------------------------------------------------------------
+        // CANCELLING CASES
+        case 'ORDER_CANCEL_REQUEST':
+            return {
+                ...state,
+                transaction: {
+                    transactionType: 'Cancel',
+                    isPending: true,
+                    isSuccessful: false
+                }
+            }
+        case 'ORDER_CANCEL_SUCCESS':
+            return {
+                ...state,
+                transaction: {
+                    transactionType: 'Cancel',
+                    isPending: false,
+                    isSuccessful: true
+                },
+                cancelledOrders: {
+                    ...state.cancelledOrders,
+                    data: [
+                        ...state.cancelledOrders.data,
+                        action.order
+                    ]
+                },
+                events: [action.event, ...state.events]
+            }
+        case 'ORDER_CANCEL_FAIL':
+            return {
+                ...state,
+                transaction: {
+                    transactionType: 'Cancel',
+                    isPending: false,
+                    isSuccessful: false,
+                    isError: true
+                }
+            }
+
         // --------------------------------------------------------------------------
         //BALANCE CASES
         case 'EXCHANGE_TOKEN_1_BALANCE_LOADED':
@@ -183,7 +223,7 @@ export const exchange = (state = DEFAULT_EXCHANGE_STATE, action) => {
         case 'NEW_ORDER_SUCCESS':
             // Prevent duplicate orders
             index = state.allOrders.data.findIndex(order => order.id.toString() === action.order.id.toString());
-            
+
             if (index === -1) { //It doesn't exist, so it's a new order that needs to be added
                 data = [...state.allOrders.data, action.order]
             }

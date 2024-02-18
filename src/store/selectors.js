@@ -191,8 +191,6 @@ export const myFilledOrdersSelector = createSelector(
     // Sort orders by date descending
     orders = orders.sort((a, b) => b.timestamp - a.timestamp);
 
-    console.log(orders);
-
     return orders;
   }
 )

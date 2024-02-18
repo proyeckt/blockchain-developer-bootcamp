@@ -71,6 +71,12 @@ export const subscribeToEvents = (exchange, dispatch)  => {
         // Notify app that order creation was sucessful
         dispatch( {type: 'NEW_ORDER_SUCCESS', event, order} );
     });
+
+    exchange.on('Cancel', (id, user, tokenGet, amountGet, tokenGive, amountGive, timestamp, event) => { //Event arguments from  Cancel Event in Smart Contract
+        const order = event.args;
+        // Notify app that order cancelation was sucessful
+        dispatch( {type: 'ORDER_CANCEL_SUCCESS', event, order} );
+    });
 }
 
 // -----------------------------------------------------------------------------
@@ -175,5 +181,20 @@ export const makeSellOrder = async (provider, exchange, tokens, order, dispatch)
     }
     catch (error) {
         dispatch({ type: 'NEW_ORDER_FAIL' });
+    }
+}
+
+// ----------------------------------------------------------------------------------------
+// CANCEL ORDER
+export const cancelOrder = async (provider, exchange, order, dispatch) => {
+    dispatch({ type: 'ORDER_CANCEL_REQUEST' });
+
+    try { 
+        const signer = await provider.getSigner();
+        const transaction = await exchange.connect(signer).cancelOrder(order.id);
+        await transaction.wait();
+    }
+    catch (error) {
+        dispatch({ type: 'ORDER_CANCEL_FAIL' });
     }
 }
