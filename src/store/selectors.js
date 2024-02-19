@@ -71,7 +71,7 @@ const decorateOrder = (order, tokens) => {
   let token0Amount, token1Amount;
   // Note: ZLH should be considered token0, mETH is considered token1
   // Example: Giving mETH in exchange for ZLH
-  if (token0Amount === tokens[1].address) {
+  if (order.tokenGive === tokens[1].address) {
     token0Amount = order.amountGive; // The amount of ZLH we are giving
     token1Amount = order.amountGet; // The amount of mETH we want
   } else {
