@@ -45,12 +45,13 @@ const Navbar = () => {
                         <option value="0" disabled>Select Network</option>
                         <option value="0x7A69" >Localhost</option>
                         <option value="0xaa36a7" >Sepolia</option>
+                        <option value="0x13882" >Polygon Amoy</option>
                     </select>
                 )}
             </div>
             <div className="exchange__header--account flex">
                 { balance ? 
-                    <p><small>My Balance:</small>{Number(balance).toFixed(4)} ETH</p>
+                    <p><small>My Balance:</small>{Number(balance).toFixed(4)} {config[chainId].currency}</p>
                     : <p><small>My Balance:</small>0 ETH</p>
                 }
                 { account ? 
