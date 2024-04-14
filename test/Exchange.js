@@ -132,7 +132,7 @@ describe('Exchange', () => {
 
     describe('Success',()=>{
       beforeEach(async ()=>{
-        //Deposit tokens before withdrawing, just for test
+        //Deposit tokens before, just for test
         //Approve Token
         transaction = await token1.connect(user1).approve(exchange.address,amount);
         result= await transaction.wait();

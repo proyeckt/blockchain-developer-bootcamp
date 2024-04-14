@@ -114,6 +114,7 @@ async function main(){
   result = await transaction.wait();
   console.log(`Made order from ${user1.address}`);
 
+  // User 2 fills final order
   orderId = result.events[0].args.id;
   transaction = await exchange.connect(user2).fillOrder(orderId);
   result = await transaction.wait();

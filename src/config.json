@@ -11,6 +11,22 @@
     },
     "mDAI":{
       "address":"0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
-    }
+    },
+    "explorerURL": "#"
+  },
+  "11155111":{
+    "exchange":{
+      "address":"0xf4431d4d784b4AcACcA9AB64dd59b40c86E1B9Fd"
+    },
+    "ZLH":{
+      "address":"0xcB24162AbE71556c347b8DE1f2A0e64a8971a07A"
+    },
+    "mETH":{
+      "address":"0xF9f518D8997Bde315469da9BF1926f15b37643AD"
+    },
+    "mDAI":{
+      "address":"0xc887717EbE545b1351a66D708a96CC22746AACBd"
+    },
+    "explorerURL": "https://sepolia.etherscan.io/"
   }
 }
